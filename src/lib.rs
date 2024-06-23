@@ -24,6 +24,21 @@ pub unsafe extern "C" fn _start() -> ! {
 }
 
 //
+// (theoretically) useful CSR registers for the emulated RISC-V
+// in practice these aren't very useful yet because asm! doesn't
+// allow constants; need to look into this
+//
+
+pub const CNT_CSR:  u32 = 0xc00;
+pub const CNT_CSRH: u32 = 0xc80;
+
+pub const UART_CSR:    u32 = 0xbc0;
+pub const WAITCYC_CSR: u32 = 0xbc1;
+pub const DBGPRNT_CSR: u32 = 0xbc2;
+pub const MILLIS_CSR:  u32 = 0xbc3;
+pub const UART_STATUS_CSR: u32 = 0xbc4;
+
+//
 // these methods are basically the same as the standard P2 system
 // functions in C <propeller2.h> or Spin2
 //
@@ -123,11 +138,23 @@ pub fn rdpin( p: u32 ) -> u32 {
 
 // delay by some number of cycles
 #[inline(always)]
-pub fn delay_cycles( n: u32 ) {
+pub fn waitx( n: u32 ) {
   unsafe {
     asm!(
       ".insn i CUSTOM_1, 1, x0, 31({zi})",
         zi = in(reg) n
+      );
+  }
+}
+
+// delay by some number of milliseconds
+#[inline(always)]
+pub fn waitms( ms: u32 ) {
+  unsafe {
+    // 0xbc3 is MILLIS_CSR
+    asm!(
+      "csrw 0xbc3, {rs}",
+      rs = in(reg) ms
       );
   }
 }
