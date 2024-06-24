@@ -1,5 +1,5 @@
 //
-// Simple P2 LED blinker
+// Simple runtime library for riscvp2
 // Written by Eric R. Smith <eric.smith@collabora.com>
 // Copyright 2024 Collabora Ltd.
 // SPDX-License-Identifier: MIT
