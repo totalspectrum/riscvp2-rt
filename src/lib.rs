@@ -158,3 +158,14 @@ pub fn waitms( ms: u32 ) {
       );
   }
 }
+
+// transmit a single byte on the default serial port
+pub fn tx( c: u8 ) {
+  unsafe {
+    // 0xbc0 is UART_CSR
+    asm!(
+      "csrw 0xbc0, {rs}",
+      rs = in(reg) c
+      );
+  }
+}
