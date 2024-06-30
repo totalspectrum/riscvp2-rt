@@ -6,8 +6,7 @@
 	.globl _interpstart
 _interpstart:
 	.incbin "p2lut.bin"
-
-	.text
 	.globl _riscv_start
+	.globl main
 _riscv_start:
-	
+	j	_start
